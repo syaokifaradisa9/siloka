@@ -1,110 +1,69 @@
-import { Head, useForm } from '@inertiajs/react';
-import { LoaderCircle } from 'lucide-react';
-import { FormEventHandler } from 'react';
-
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AuthLayout from '@/layouts/auth-layout';
+import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { useState } from 'react';
 
-type LoginForm = {
-    email: string;
-    password: string;
-    remember: boolean;
-};
+export default function LoginForm() {
+    const [showPassword, setShowPassword] = useState(false);
 
-interface LoginProps {
-    status?: string;
-    canResetPassword: boolean;
-}
-
-export default function Login({ status, canResetPassword }: LoginProps) {
-    const { data, setData, post, processing, errors, reset } = useForm<Required<LoginForm>>({
-        email: '',
-        password: '',
-        remember: false,
-    });
-
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        post(route('login'), {
-            onFinish: () => reset('password'),
-        });
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
     };
 
     return (
-        <AuthLayout title="Log in to your account" description="Enter your email and password below to log in">
-            <Head title="Log in" />
-
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            required
-                            autoFocus
-                            tabIndex={1}
-                            autoComplete="email"
-                            value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
-                            placeholder="email@example.com"
-                        />
-                        <InputError message={errors.email} />
-                    </div>
-
-                    <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">Password</Label>
-                            {canResetPassword && (
-                                <TextLink href={route('password.request')} className="ml-auto text-sm" tabIndex={5}>
-                                    Forgot password?
-                                </TextLink>
-                            )}
+        <div className="flex min-h-screen w-full items-center justify-center bg-[#FDF8EE]">
+            <Card className="hover:shadow-3xl mx-auto min-w-md rounded-xl border border-gray-200 bg-white text-black shadow-2xl transition-all duration-300">
+                <CardHeader className="text-center">
+                    <CardTitle className="text-2xl font-bold">SILOKA</CardTitle>
+                    <CardDescription className="text-gray-600">Sistem Informasi Kelola Logistik Kantor</CardDescription>
+                </CardHeader>
+                <CardContent className="mt-4 px-6 py-4">
+                    <div className="grid gap-6">
+                        <div className="grid gap-2">
+                            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                                Email
+                            </Label>
+                            <Input
+                                id="email"
+                                type="email"
+                                placeholder="Isikan email akun"
+                                required
+                                className="bg-opacity-50 focus:ring-0.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-gray-800 transition-all duration-200 outline-none focus:border-orange-400 focus:ring-orange-400"
+                            />
                         </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={2}
-                            autoComplete="current-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            placeholder="Password"
-                        />
-                        <InputError message={errors.password} />
+                        <div className="grid gap-2">
+                            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                                Password
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    required
+                                    placeholder="Isikan password"
+                                    className="bg-opacity-50 focus:ring-0.5 rounded-lg border border-gray-200 bg-white px-4 py-2 text-gray-800 transition-all duration-200 outline-none focus:border-orange-400 focus:ring-orange-400"
+                                />
+                                <Button
+                                    variant="link"
+                                    className="absolute top-0 right-0 h-full cursor-pointer text-sm text-gray-500 transition-colors duration-200 hover:text-orange-500"
+                                    onClick={togglePasswordVisibility}
+                                >
+                                    {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                                </Button>
+                            </div>
+                        </div>
+                        <Button
+                            type="submit"
+                            className="w-full transform cursor-pointer rounded-md bg-orange-400 py-2 text-white transition-colors duration-200 hover:bg-orange-500"
+                        >
+                            Sign in
+                        </Button>
                     </div>
-
-                    <div className="flex items-center space-x-3">
-                        <Checkbox
-                            id="remember"
-                            name="remember"
-                            checked={data.remember}
-                            onClick={() => setData('remember', !data.remember)}
-                            tabIndex={3}
-                        />
-                        <Label htmlFor="remember">Remember me</Label>
-                    </div>
-
-                    <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                        Log in
-                    </Button>
-                </div>
-
-                <div className="text-center text-sm text-muted-foreground">
-                    Don't have an account?{' '}
-                    <TextLink href={route('register')} tabIndex={5}>
-                        Sign up
-                    </TextLink>
-                </div>
-            </form>
-
-            {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}
-        </AuthLayout>
+                </CardContent>
+            </Card>
+            <div className="absolute bottom-6 text-center text-sm text-gray-500">&copy; Nocturnal Projects 2025</div>
+        </div>
     );
 }
