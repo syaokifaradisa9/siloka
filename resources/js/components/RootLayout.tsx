@@ -25,11 +25,11 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children, title, description, p
     }, [title]);
 
     return (
-        <div className="flex h-screen bg-gray-900 text-gray-100">
+        <div className="flex h-screen">
             <Sidebar isCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
             <div className={`flex flex-1 flex-col overflow-hidden transition-all duration-300`}>
                 <Topbar />
-                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-6 dark:bg-[#141B26]">
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 px-10 py-9 dark:bg-[#141B26]">
                     {title && description && <PageHeader title={title} description={description} rightContent={pageHeaderRightContent} />}
                     <ContentBody>{children}</ContentBody>
                 </main>
