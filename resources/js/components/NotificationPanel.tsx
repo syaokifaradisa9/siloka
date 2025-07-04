@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 
 interface NotificationPanelProps {
     onClose: () => void;
-    toggleButtonRef: React.RefObject<SVGSVGElement>;
+    toggleButtonRef: React.RefObject<SVGSVGElement | null>;
 }
 
 const NotificationPanel: React.FC<NotificationPanelProps> = ({ onClose, toggleButtonRef }) => {

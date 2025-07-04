@@ -1,5 +1,6 @@
+import { SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import LightDarkModeToggle from './LightDarkModeToggle';
 import Notification from './Notification';
 import ProfilePanel from './ProfilePanel';
@@ -8,20 +9,23 @@ interface TopbarProps {
     title?: string;
 }
 
-const Topbar: React.FC<TopbarProps> = ({ title }) => {
+const Topbar: React.FC<TopbarProps> = () => {
     const [isProfilePanelOpen, setIsProfilePanelOpen] = useState(false);
-    const profileButtonRef = useRef<HTMLDivElement>(null);
-    const { props } = usePage();
+    const profileButtonRef = useRef<HTMLDivElement | null>(null);
+    const { props } = usePage<SharedData>();
     const user = props.auth.user;
 
     return (
-        <div className="flex w-full items-center justify-between rounded-none border-b border-gray-200 bg-white px-10 py-5 dark:border-gray-700 dark:bg-gray-800">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{title || 'Overview'}</h2>
+        <div className="flex w-full items-center justify-end rounded-none border-b border-gray-300 bg-gray-200 px-10 py-5 dark:border-gray-700 dark:bg-[#141B26]">
             <div className="flex items-center space-x-4">
-                <LightDarkModeToggle />
                 <Notification />
+                <LightDarkModeToggle />
                 <div className="relative ml-3">
-                    <div ref={profileButtonRef} className="flex cursor-pointer items-center" onClick={() => setIsProfilePanelOpen(!isProfilePanelOpen)}>
+                    <div
+                        ref={profileButtonRef}
+                        className="flex cursor-pointer items-center"
+                        onClick={() => setIsProfilePanelOpen(!isProfilePanelOpen)}
+                    >
                         <p className="text-[11pt] font-medium text-gray-800 dark:text-gray-100">{user.name}</p>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

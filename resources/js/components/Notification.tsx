@@ -4,7 +4,7 @@ import NotificationPanel from './NotificationPanel';
 
 const Notification: React.FC = () => {
     const [showPanel, setShowPanel] = useState(false);
-    const bellRef = useRef<SVGSVGElement>(null);
+    const bellRef = useRef<SVGSVGElement | null>(null);
 
     const togglePanel = () => {
         setShowPanel((prev) => !prev);

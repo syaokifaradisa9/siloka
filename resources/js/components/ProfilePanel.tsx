@@ -1,14 +1,15 @@
 import { Link, usePage } from '@inertiajs/react';
+import { SharedData } from '@/types';
 import { LogOut, Settings, User } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
 interface ProfilePanelProps {
     onClose: () => void;
-    toggleButtonRef: React.RefObject<HTMLDivElement>;
+    toggleButtonRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function ProfilePanel({ onClose, toggleButtonRef }: ProfilePanelProps) {
-    const { props } = usePage();
+    const { props } = usePage<SharedData>();
     const user = props.auth.user;
 
     const panelRef = useRef<HTMLDivElement>(null);
