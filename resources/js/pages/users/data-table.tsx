@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -15,32 +14,26 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
-    queryKey: string;
-    queryFn: () => Promise<TData[]>;
-    globalFilter: string;
+    data: TData[];
+    isLoading: boolean;
+    isError: boolean;
 }
 
 export function DataTable<TData, TValue>({
     columns,
-    queryKey,
-    queryFn,
-    globalFilter,
+    data,
+    isLoading,
+    isError,
 }: DataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = useState({});
-
-    const { data, isLoading, isError } = useQuery<TData[]>({
-        queryKey: [queryKey],
-        queryFn: queryFn,
-    });
 
     const table = useReactTable({
         data: data || [],
@@ -58,7 +51,6 @@ export function DataTable<TData, TValue>({
             sorting,
             columnVisibility,
             rowSelection,
-            globalFilter,
         },
         enableRowSelection: true,
     });
@@ -109,11 +101,7 @@ export function DataTable<TData, TValue>({
                                         <TableHead key={header.id} className="text-left font-medium text-gray-500 dark:text-gray-400">
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext()
-                                                  )}
+                                                : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}
@@ -125,27 +113,19 @@ export function DataTable<TData, TValue>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && "selected"
-                                    }
+                                    data-state={row.getIsSelected() && 'selected'}
                                     className="border-b transition-colors hover:bg-gray-100/50 data-[state=selected]:bg-gray-100 dark:hover:bg-gray-800/50 dark:data-[state=selected]:bg-gray-800"
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id} className="p-4 align-middle">
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
                                     No results.
                                 </TableCell>
                             </TableRow>
@@ -155,7 +135,8 @@ export function DataTable<TData, TValue>({
             </div>
             <div className="flex items-center justify-end space-x-2 py-4">
                 <div className="flex-1 text-sm text-muted-foreground">
-                    {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s) selected.
+                    {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
+                    selected.
                 </div>
                 <div className="flex items-center space-x-6 lg:space-x-8">
                     <div className="flex items-center space-x-2">
@@ -182,7 +163,12 @@ export function DataTable<TData, TValue>({
                         Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
                     </div>
                     <div className="space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
                             Previous
                         </Button>
                         <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
