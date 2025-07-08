@@ -8,7 +8,7 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
         header: ({ column }) => {
             return (
                 <button className="flex items-center space-x-1" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Name
+                    Nama
                     {column.getIsSorted() === 'asc' ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +70,7 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
             onIndividualColumnFilterChange: (columnId: string, value: string) => void;
         }) => (
             <ColumnFilterInput
-                placeholder="Filter Name"
+                placeholder="Filter Nama"
                 value={(props.columnFilters.find((filter) => filter.id === 'name')?.value as string) || ''}
                 onChange={(value) => props.onIndividualColumnFilterChange('name', value)}
             />
@@ -155,7 +155,7 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
         header: ({ column }) => {
             return (
                 <button className="flex items-center space-x-1" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-                    Division
+                    Divisi
                     {column.getIsSorted() === 'asc' ? (
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
