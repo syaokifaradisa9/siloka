@@ -26,4 +26,12 @@ class UserController extends Controller
     public function datatable(Request $request){
         return $this->datatableService->getDatatable($request);
     }
+
+    public function printPdf(Request $request){
+        return $this->datatableService->printPdf($request);
+    }
+
+    public function printExcel(Request $request){
+        return $this->datatableService->printExcel($request);
+    }
 }

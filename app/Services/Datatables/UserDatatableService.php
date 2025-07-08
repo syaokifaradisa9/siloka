@@ -51,4 +51,12 @@ class UserDatatableService
 
         return $query->paginate($perPage);
     }
+
+    public function printPdf(Request $request){
+
+    }
+
+    public function printExcel(Request $request){
+
+    }
 }

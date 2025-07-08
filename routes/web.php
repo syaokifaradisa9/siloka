@@ -24,7 +24,10 @@ Route::middleware("auth")->group(function () {
     Route::prefix("users")->name("users.")->controller(UserController::class)->group(function(){
         Route::get('/', 'index')->name("index");
         Route::get('datatable', 'datatable');
-        Route::get('divisions', 'getDivisions')->name('divisions');
+        Route::prefix("print")->name("print.")->group(function(){
+            Route::get('pdf', 'printPdf')->name("pdf");
+            Route::get('excel', 'printExcel')->name("excel");
+        });
     });
 });
 

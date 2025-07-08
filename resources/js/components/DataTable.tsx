@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -113,7 +114,7 @@ export function DataTable<TData, TValue>({
                     </Select>
                     <span className="text-sm">Per Halaman</span>
                 </div>
-                <div className="relative z-10 flex items-center space-x-2">
+                <div className="relative flex items-center space-x-2">
                     <Input type="search" placeholder="Cari data..." className="w-64" onChange={(e) => handleGlobalSearch(e.target.value)} />
                     <button className="cursor-pointer rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Edit">
                         <svg
@@ -132,24 +133,32 @@ export function DataTable<TData, TValue>({
                             <path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4Z" />
                         </svg>
                     </button>
-                    <button className="cursor-pointer rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Print">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="lucide lucide-printer"
-                        >
-                            <polyline points="6 9 6 2 18 2 18 9" />
-                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
-                            <rect width="12" height="8" x="6" y="14" />
-                        </svg>
-                    </button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <button className="cursor-pointer rounded-md p-2 hover:bg-gray-100 dark:hover:bg-gray-700" aria-label="Print">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="lucide lucide-printer"
+                                >
+                                    <polyline points="6 9 6 2 18 2 18 9" />
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                    <rect width="12" height="8" x="6" y="14" />
+                                </svg>
+                            </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="z-[9999]">
+                            <DropdownMenuItem onClick={() => console.log('PDF clicked')}>PDF</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => console.log('Excel clicked')}>Excel</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             </div>
 
