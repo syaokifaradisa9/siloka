@@ -84,9 +84,6 @@ export default function UserIndex({ divisions }: UserIndexProps) {
         setQuery((prev) => ({ ...prev, page, per_page: pageSize }));
     };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error: {error?.message}</div>;
-
     return (
         <RootLayout title="Manajemen User" description="Kelola semua pengguna yang terdaftar di sistem Anda.">
             <DataTable
