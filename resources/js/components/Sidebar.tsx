@@ -1,6 +1,6 @@
+import { usePage } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, LayoutDashboard, Users } from 'lucide-react';
 import SidebarLink from './SidebarLink';
-import { usePage } from '@inertiajs/react';
 
 interface SidebarProps {
     isCollapsed: boolean;
@@ -21,7 +21,7 @@ export default function Sidebar({ isCollapsed, toggleSidebar }: SidebarProps) {
             {/* Navigation */}
             <ul className="flex-1">
                 <SidebarLink icon={LayoutDashboard} text="Dashboard" href="/dashboard" isCollapsed={isCollapsed} isActive={url === '/dashboard'} />
-                <SidebarLink icon={Users} text="User" href="/users" isCollapsed={isCollapsed} isActive={url === '/users'} />
+                <SidebarLink icon={Users} text="User" href="/users" isCollapsed={isCollapsed} isActive={url.startsWith('/users')} />
             </ul>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 transform">
                 <button

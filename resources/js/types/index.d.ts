@@ -31,6 +31,8 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+import { Division } from './division';
+
 export interface User {
     id: number;
     name: string;
@@ -39,5 +41,13 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+    division_id?: number;
+    division?: Division;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        user: User;
+    };
+};

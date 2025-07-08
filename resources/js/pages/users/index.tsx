@@ -1,8 +1,12 @@
 import { DataTable } from '@/components/DataTable';
 import RootLayout from '@/components/RootLayout';
-import { useQuery } from '@tanstack/react-query';
+import { Button } from '@/components/ui/button';
+import { Link, router } from '@inertiajs/react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ColumnFiltersState, SortingState } from '@tanstack/react-table';
+import { PlusCircle } from 'lucide-react';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { getColumns } from './columns';
 
 interface UserIndexProps {
@@ -19,7 +23,7 @@ export default function UserIndex({ divisions }: UserIndexProps) {
     });
 
     const fetchUsersData = async ({ queryKey }: { queryKey: [string, typeof query] }) => {
-        const [_, { page, per_page, search, filters, sort }] = queryKey;
+        const [, { page, per_page, search, filters, sort }] = queryKey;
         const params = {
             page: String(page),
             per_page: String(per_page),
@@ -67,14 +71,48 @@ export default function UserIndex({ divisions }: UserIndexProps) {
         });
     };
 
-    const { data, isLoading, isError, error } = useQuery({
+    const queryClient = useQueryClient();
+    const { data } = useQuery({
         queryKey: ['users', query],
         queryFn: fetchUsersData,
         placeholderData: (previousData) => previousData,
         staleTime: 5 * 60 * 1000,
     });
 
-    const columns = React.useMemo(() => getColumns(divisions), [divisions]);
+    const handleDelete = (id: number) => {
+        toast(
+            (t) => (
+                <div className="flex flex-col items-center gap-4">
+                    <div className="font-bold">Are you sure you want to delete this user?</div>
+                    <div className="flex gap-2">
+                        <Button
+                            onClick={() => {
+                                router.delete(route('users.destroy', id), {
+                                    onSuccess: () => {
+                                        toast.success('User deleted successfully');
+                                        queryClient.invalidateQueries({ queryKey: ['users'] });
+                                    },
+                                    onError: () => {
+                                        toast.error('Failed to delete user');
+                                    },
+                                });
+                                toast.dismiss(t.id);
+                            }}
+                            className="bg-red-500 text-white"
+                        >
+                            Delete
+                        </Button>
+                        <Button onClick={() => toast.dismiss(t.id)}>Cancel</Button>
+                    </div>
+                </div>
+            ),
+            {
+                duration: 6000,
+            },
+        );
+    };
+
+    const columns = React.useMemo(() => getColumns(divisions, handleDelete), [divisions]);
 
     const handleSearch = (searchQuery: string) => {
         setQuery((prev) => ({ ...prev, search: searchQuery, page: 1 }));
@@ -118,8 +156,20 @@ export default function UserIndex({ divisions }: UserIndexProps) {
         window.open(`/users/print/excel?${queryParams}`, '_blank');
     };
 
+    const pageHeaderRightContent = (
+        <Button asChild>
+            <Link href={route('users.create')}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Tambah Data
+            </Link>
+        </Button>
+    );
     return (
-        <RootLayout title="Manajemen User" description="Kelola semua pengguna yang terdaftar di sistem Anda.">
+        <RootLayout
+            title="Manajemen User"
+            description="Kelola semua pengguna yang terdaftar di sistem Anda."
+            pageHeaderRightContent={pageHeaderRightContent}
+        >
             <DataTable
                 columns={columns}
                 data={data?.data || []}

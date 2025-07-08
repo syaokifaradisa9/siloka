@@ -1,8 +1,14 @@
-import { ColumnFilterInput } from '@/components/ColumnFilterInput';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ColumnDef, Table } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { User } from '@/types';
+import { Link } from '@inertiajs/react';
+import { ColumnDef } from '@tanstack/react-table';
+import { Pencil, Trash2 } from 'lucide-react';
 
-export const getColumns = <TData, TValue>(divisions: { id: number; name: string }[]): ColumnDef<TData, TValue>[] => [
+export const getColumns = <TData extends User, TValue>(
+    divisions: { id: number; name: string }[],
+    handleDelete: (id: number) => void,
+): ColumnDef<TData, TValue>[] => [
     {
         accessorKey: 'name',
         header: ({ column }) => {
@@ -64,17 +70,6 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
             );
         },
         enableSorting: true,
-        footer: (props: {
-            table: Table<TData>;
-            columnFilters: ColumnFiltersState;
-            onIndividualColumnFilterChange: (columnId: string, value: string) => void;
-        }) => (
-            <ColumnFilterInput
-                placeholder="Filter Nama"
-                value={(props.columnFilters.find((filter) => filter.id === 'name')?.value as string) || ''}
-                onChange={(value) => props.onIndividualColumnFilterChange('name', value)}
-            />
-        ),
     },
     {
         accessorKey: 'email',
@@ -137,17 +132,6 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
             );
         },
         enableSorting: true,
-        footer: (props: {
-            table: Table<TData>;
-            columnFilters: ColumnFiltersState;
-            onIndividualColumnFilterChange: (columnId: string, value: string) => void;
-        }) => (
-            <ColumnFilterInput
-                placeholder="Filter Email"
-                value={(props.columnFilters.find((filter) => filter.id === 'email')?.value as string) || ''}
-                onChange={(value) => props.onIndividualColumnFilterChange('email', value)}
-            />
-        ),
     },
     {
         accessorKey: 'division.name',
@@ -215,33 +199,6 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
             return division ? division.name : '-';
         },
         enableSorting: true,
-        footer: (props: {
-            table: Table<TData>;
-            columnFilters: ColumnFiltersState;
-            onIndividualColumnFilterChange: (columnId: string, value: string) => void;
-        }) => {
-            const selectedValue = (props.columnFilters.find((filter) => filter.id === 'division_id')?.value as string) || '0';
-            console.log('Selected Division Value:', selectedValue);
-            return (
-                <Select onValueChange={(value) => props.onIndividualColumnFilterChange('division_id', value)} value={String(selectedValue)}>
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Pilih Divisi">
-                            {selectedValue === '0'
-                                ? 'Semua Divisi'
-                                : divisions.find((d) => String(d.id) === selectedValue)?.name || 'Pilih Divisi'}
-                        </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="0">Semua Divisi</SelectItem>
-                        {divisions.map((division) => (
-                            <SelectItem key={division.id} value={String(division.id)}>
-                                {division.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            );
-        },
     },
     {
         accessorKey: 'division_id',
@@ -249,5 +206,43 @@ export const getColumns = <TData, TValue>(divisions: { id: number; name: string 
         cell: () => null, // Hidden cell
         enableHiding: true,
         enableColumnFilter: true,
+    },
+    {
+        id: 'actions',
+        header: 'Aksi',
+        cell: ({ row }) => {
+            const user = row.original;
+
+            return (
+                <div className="flex items-center">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" asChild>
+                                    <Link href={route('users.edit', user.id)}>
+                                        <Pencil className="h-4 w-4" />
+                                    </Link>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Edit</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" onClick={() => handleDelete(user.id)}>
+                                    <Trash2 className="h-4 w-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Delete</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            );
+        },
     },
 ];
