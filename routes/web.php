@@ -24,6 +24,7 @@ Route::middleware("auth")->group(function () {
     Route::prefix("users")->name("users.")->controller(UserController::class)->group(function(){
         Route::get('/', 'index')->name("index");
         Route::get('datatable', 'datatable');
+        Route::get('divisions', 'getDivisions')->name('divisions');
     });
 });
 

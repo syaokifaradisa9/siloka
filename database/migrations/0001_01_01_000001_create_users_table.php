@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("position")->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->boolean('is_active')->default(true);
             $table->foreignIdFor(Division::class)->nullable()->constrained();
             $table->rememberToken();
             $table->timestamps();

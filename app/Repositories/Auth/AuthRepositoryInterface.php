@@ -9,3 +9,4 @@ interface AuthRepositoryInterface
 {
     public function attemptLogin(LoginDTO $loginDTO): ?User;
 }
+
