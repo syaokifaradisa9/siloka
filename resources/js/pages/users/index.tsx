@@ -84,6 +84,40 @@ export default function UserIndex({ divisions }: UserIndexProps) {
         setQuery((prev) => ({ ...prev, page, per_page: pageSize }));
     };
 
+    const handlePrintPdf = () => {
+        const params = {
+            search: String(query.search),
+            ...Object.fromEntries(
+                query.filters
+                    .filter((filter): filter is { id: string; value: string | number | boolean } => {
+                        return typeof filter.value === 'string' || typeof filter.value === 'number' || typeof filter.value === 'boolean';
+                    })
+                    .map((filter) => [filter.id, String(filter.value)]),
+            ),
+            sort_by: String(query.sort.length > 0 ? query.sort[0].id : ''),
+            sort_type: String(query.sort.length > 0 ? (query.sort[0].desc ? 'desc' : 'asc') : ''),
+        };
+        const queryParams = new URLSearchParams(params).toString();
+        window.open(`/users/print/pdf?${queryParams}`, '_blank');
+    };
+
+    const handlePrintExcel = () => {
+        const params = {
+            search: String(query.search),
+            ...Object.fromEntries(
+                query.filters
+                    .filter((filter): filter is { id: string; value: string | number | boolean } => {
+                        return typeof filter.value === 'string' || typeof filter.value === 'number' || typeof filter.value === 'boolean';
+                    })
+                    .map((filter) => [filter.id, String(filter.value)]),
+            ),
+            sort_by: String(query.sort.length > 0 ? query.sort[0].id : ''),
+            sort_type: String(query.sort.length > 0 ? (query.sort[0].desc ? 'desc' : 'asc') : ''),
+        };
+        const queryParams = new URLSearchParams(params).toString();
+        window.open(`/users/print/excel?${queryParams}`, '_blank');
+    };
+
     return (
         <RootLayout title="Manajemen User" description="Kelola semua pengguna yang terdaftar di sistem Anda.">
             <DataTable
@@ -99,6 +133,8 @@ export default function UserIndex({ divisions }: UserIndexProps) {
                 sorting={query.sort}
                 setSorting={handleSortingChange}
                 onIndividualColumnFilterChange={handleIndividualColumnFilterChange}
+                onPrintPdf={handlePrintPdf}
+                onPrintExcel={handlePrintExcel}
             />
         </RootLayout>
     );

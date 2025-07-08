@@ -30,6 +30,8 @@ interface DataTableProps<TData, TValue> {
     sorting: SortingState;
     setSorting: React.Dispatch<React.SetStateAction<SortingState>>;
     onIndividualColumnFilterChange: (columnId: string, value: string) => void;
+    onPrintPdf?: () => void;
+    onPrintExcel?: () => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +47,8 @@ export function DataTable<TData, TValue>({
     sorting,
     setSorting,
     onIndividualColumnFilterChange,
+    onPrintPdf,
+    onPrintExcel,
 }: DataTableProps<TData, TValue>) {
     const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: currentPage - 1,
@@ -155,8 +159,8 @@ export function DataTable<TData, TValue>({
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent className="z-[9999]">
-                            <DropdownMenuItem onClick={() => console.log('PDF clicked')}>PDF</DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => console.log('Excel clicked')}>Excel</DropdownMenuItem>
+                            <DropdownMenuItem onClick={onPrintPdf}>PDF</DropdownMenuItem>
+                            <DropdownMenuItem onClick={onPrintExcel}>Excel</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
